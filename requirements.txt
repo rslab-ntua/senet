@@ -1,0 +1,8 @@
+getpass4
+pandas
+wheel
+GDAL
+sentinelsat
+git+git://github.com/hectornieto/pypro4sail@master
+git+git://github.com/DHI-GRAS/pyTSEB@master
+git+git://github.com/alekfal/pyDMS@master
