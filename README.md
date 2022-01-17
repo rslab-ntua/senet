@@ -1,5 +1,5 @@
 # senet
-Energy Balance model approach for irrigation for MAGO project with SEN-ET SNAP plugin.
+Energy Balance model approach for irrigation (SEN-ET SNAP plugin).
 
 ### Install ESA SNAP
 
