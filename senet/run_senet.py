@@ -7,6 +7,7 @@ import math
 
 from datetime import datetime, timedelta
 
+from get_creodias import get_data, prepare_data_senet_S2, eodata_path_creator
 from sentinels import sentinel2, sentinel3
 from timezone import get_offset
 from core.leaf_spectra import leaf_spectra
@@ -27,9 +28,9 @@ wgs_crs = pyproj.crs.CRS("epsg:4326")
 
 USER = getpass.getuser()
 
-meteo_datapath = "/home/tars/Desktop/RSLab/MAGO/Data/Meteo/"
+meteo_datapath = "/home/eouser/uth/Cap_Bon/Meteo/"
 
-AOI_path = "/home/tars/Desktop/RSLab/MAGO/Data/AOI/AOI.geojson" 
+AOI_path = "/home/eouser/uth/Cap_Bon/AOI/AOI_Cap_Bon.geojson" 
 AOI = geopandas.read_file(AOI_path)
 CRS = AOI.crs
 
@@ -38,17 +39,51 @@ if CRS != wgs_crs:
 
 WKT_GEOM = AOI.geometry[0]
 
-s2_path="/home/tars/Desktop/RSLab/MAGO/Data/S2"
-s2_name = "S2A_MSIL2A_20200513T092031_N0214_R093_T34SEJ_20200513T121338.SAFE"
+user = "user"
+password = "user"
+start_date = "20210810"
+end_date = "20210820"
+data = get_data(AOI_path, start_date, end_date, user, password, producttype = "S2MSI2A")
+data = prepare_data_senet_S2(data)
+creodias_paths = eodata_path_creator(data)
+
+# From all available images select the first
+s2_path, s2_name = os.path.split(creodias_paths[0])
 
 s2 = sentinel2(s2_path, s2_name)
 s2.getmetadata()
 
-s3_path="/home/tars/Desktop/RSLab/MAGO/Data/S3"
-s3_name = "S3B_SL_2_LST____20200513T084415_20200513T084715_20200514T140534_0179_039_007_2340_LN2_O_NT_004.SEN3/"
+# Now select an available S3 image
+start_date = s2.date
+end_date = s2.date + 1
+data = get_data(AOI_path, start_date, end_date, user, password, platform = "Sentinel-3", producttype = "SL_2_LST___")
+creodias_paths = eodata_path_creator(data)
+
+# Again select the first image
+s3_path, s3_name = os.path.split(creodias_paths[0])
 
 s3 = sentinel3(s3_path, s3_name)
 s3.getmetadata()
+
+# Because the user has no permission to write make a new directory inside the user with the selected image name
+home = "home/eouser/uth"
+
+if not os.path.exists(os.path.join(home, "Sentinel-2")):
+    os.mkdir(os.path.join(home, "Sentinel-2"))
+if not os.path.exists(os.path.join(home, "Sentinel-2", s2.tile_id)):
+    os.mkdir(os.path.join(home, "Sentinel-2", s2.tile_id))
+if not os.path.exists(os.path.join(home, "Sentinel-2", s2.tile_id, s2.name)):
+    os.mkdir(os.path.join(home, "Sentinel-2", s2.tile_id, s2.name))
+
+s2_savepath = os.path.join(home, "Sentinel-2", s2.tile_id)
+
+if not os.path.exists(os.path.join(home, "Sentinel-3")):
+    os.mkdir(os.path.join(home, "Sentinel-3"))
+if not os.path.exists(os.path.join(home, "Sentinel-3", s3.name)):
+    os.mkdir(os.path.join(home, "Sentinel-3", s3.name))
+
+s3_savepath = os.path.join(home, "Sentinel-3") 
+
 """
 # 1.SENTINEL 2 PREPROCESSING (GRAPH)
 subprocess.run([f"/home/{USER}/esa-snap/bin/gpt", "./auxdata/sentinel_2_preprocessing.xml",
