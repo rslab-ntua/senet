@@ -1,5 +1,7 @@
 getpass4
 pandas
+geopandas
+timezonefinder
 wheel
 GDAL
 sentinelsat
