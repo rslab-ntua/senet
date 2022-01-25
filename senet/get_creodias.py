@@ -58,23 +58,27 @@ def eodata_path_creator(data:pd.DataFrame):
     filenames = data['filename'].tolist()
     platform = data["platformname"].tolist()
     product = data["producttype"].tolist()
-    year = [str(product_date.year) for product_date in data["ingestiondate"].tolist()]
-    month = [f"{product_date.month:02d}" for product_date in data["ingestiondate"].tolist()]
-    day = [f"{product_date.day:02d}" for product_date in data["ingestiondate"].tolist()]
-
+    
     creodias_paths = []
     for i in range(len(data)):
         path = "/eodata"
         if platform[i] == "Sentinel-3":
             instrument = data["instrumentshortname"].iloc[[i]][0]
             instrument = EO_INSTRUMENTS[platform[i]][instrument]
+            year = str(data["beginposition"].iloc[[i]][0].year)
+            month = "{:02d}".format(data["beginposition"].iloc[[i]][0].month)
+            day = "{:02d}".format(data["beginposition"].iloc[[i]][0].day)
         else:
+            year = str(data["generationdate"].iloc[[i]][0].year)
+            month = "{:02d}".format(data["generationdate"].iloc[[i]][0].month)
+            day = "{:02d}".format(data["generationdate"].iloc[[i]][0].day)
             instrument = EO_INSTRUMENTS[platform[i]]
 
-        path = os.path.join(path, platform[i], instrument, EO_PRODUCT_TYPES[platform[i]][product[i]], year[i], month[i], day[i], filenames[i])
+        path = os.path.join(path, platform[i], instrument, EO_PRODUCT_TYPES[platform[i]][product[i]], year, month, day, filenames[i])
         creodias_paths.append(path)
     
     return creodias_paths
+    
     
 def prepare_data_senet_S2(data:pd.DataFrame):
     """Cleans API response dataframe from Sentinel-2 L1C data.
@@ -129,21 +133,3 @@ def get_data(area:str, start_date:str, end_date:str, username:str, password:str,
     products_df = api.to_dataframe(products)
 
     return products_df
-    
-"""
-user = "alek.falagas"
-password = "alekos1993"
-geojson = "/home/tars/Desktop/RSLab/MAGO/Data/AOI/AOI.geojson"
-start_date = "20210810"
-end_date = "20210820"
-
-data = get_data(geojson, start_date, end_date, user, password, producttype = "S2MSI2A")
-print (data)
-data = prepare_data_senet_S2(data)
-creodias_paths = eodata_path_creator(data)
-print(creodias_paths)
-
-#data = get_data(geojson, start_date, end_date, user, password, platform = "Sentinel-1", producttype = "SLC")
-#creodias_paths = eodata_path_creator(data)
-#print(creodias_paths)
-"""
