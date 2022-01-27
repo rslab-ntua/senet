@@ -3,8 +3,8 @@ pandas
 geopandas
 timezonefinder
 wheel
-GDAL
 sentinelsat
+pyproj
 git+git://github.com/hectornieto/pypro4sail@master
 git+git://github.com/DHI-GRAS/pyTSEB@master
 git+git://github.com/alekfal/pyDMS@master
