@@ -66,6 +66,26 @@ $./update_snap_no_GUI.sh
 
 The following section analyses step by step the complete Python pipeline in order to acquire daily evapotranspiration. 
 
+| Python Method Index                                                                                       | Operation Type     |
+------------------------------------------------------------------------------------------------------------|--------------------|
+| [Get Data](#get-data)                                                                                     | Python Method      |
+| [Sentinel-2 preprocessing graph](#sentinel-2-preprocessing-graph)                                         | GPF SNAP Graph     |
+| [Add elevation graph](#add-elevation-graph)                                                               | GPF SNAP Graph     |
+| [Add landcover graph](#add-landcover-graph)                                                               | GPF SNAP Graph     |
+| [Estimate leaf reflectance and transmittance](#estimate-leaf-reflectance-and-transmittance)               | Python Method      |
+| [Estimate fraction of green vegetation](#estimate-fraction-of-green-vegetation)                           | Python Method      |
+| [Produce maps of vegetation structural parameters](#produce-maps-of-vegetation-structural-parameters)     | Python Method      |
+| [Estimate aerodynamic roughness](#estimate-aerodynamic-roughness)                                         | Python Method      |
+| [Sentinel-3 pre-processing graph](#sentinel-3-pre-processing-graph)                                       | GPF SNAP Graph     |
+| [Warp to template](#warp-to-template)                                                                     | Python Method      |
+| [Sharpen LST](#sharpen-lst)                                                                               | Python Method      |
+| [Download ECMWF ERA5 reanalysis data](#download-ecmwf-era5-reanalysis-data)                               | Python Method      |
+| [Prepare ERA5 reanalysis data](#prepare-era5-reanalysis-data)                                             | Python Method      |
+| [Estimate longwave irradiance](#estimate-longwave-irradiance)                                             | Python Method      |
+| [Estimate net shortwave radiation](#estimate-net-shortwave-radiation)                                     | Python Method      |
+| [Estimate land surface energy fluxes](#estimate-land-surface-energy-fluxes)                               | Python Method      |
+| [Estimate daily evapotranspiration](#estimate-daily-evapotranspiration)                                   | Python Method      |
+
 ### Get data
 
 At first a Sentinel-2 L2A multispectral image and a Sentinel-3 LST thermal image at the same date have to be selected. The images currently are found  from Copernicus Open Access Hub, given an area of interest (AOI) and a date range.
