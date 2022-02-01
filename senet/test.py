@@ -232,6 +232,7 @@ mask = os.path.join(s2_savepath, s2_name, "{}_{}_MASK.dim".format(s2.tile_id, s2
 output_file = os.path.join(s2_savepath, s2_name, "{}_{}_EN-FLUX.dim".format(s2.tile_id, s2.str_datetime))
 energy_fluxes(lst, lst_vza, lai, csp, fgv, ar, mi, nsr, li, mask, output_file)
 
+# 16. Estimate daily evapotranspiration
 
 start_date = str(s2.date - timedelta(days = 1))
 end_date = str(s2.date + timedelta(days = 1))

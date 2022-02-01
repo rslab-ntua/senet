@@ -1,4 +1,3 @@
-import os
 from core.ecmwf_utils import download_CDS_data
 
 def get(area:str, start_date:str, end_date:str, download_path:str, download_pressure:bool = True, download_temperature:bool= True,

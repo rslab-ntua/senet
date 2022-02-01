@@ -5,6 +5,9 @@ timezonefinder
 wheel
 sentinelsat
 pyproj
+numpy
+cdsapi
+netCDF4
 git+git://github.com/hectornieto/pypro4sail@master
 git+git://github.com/DHI-GRAS/pyTSEB@master
 git+git://github.com/alekfal/pyDMS@master
