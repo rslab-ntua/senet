@@ -90,6 +90,8 @@ The following section analyses step by step the complete Python pipeline in orde
 
 At first a Sentinel-2 L2A multispectral image and a Sentinel-3 LST thermal image at the same date have to be selected. The images currently are found  from Copernicus Open Access Hub, given an area of interest (AOI) and a date range.
 
+:warning: Note that an ESA APIHUB account must be used for searching satellite data and also, user and password variables must be changed inside the code.
+
 See the example bellow:
 
 ```python
