@@ -13,7 +13,7 @@ $chmod +x install_snap.sh
 $./install_snap.sh
 ```
 
-:warning: Do not install SNAP to default option (/home/USER/snap) and install it in a different folder (e.g /home/USER/esa-snap) to avoid facing problems with Ubuntu snap.
+:warning: Do not install SNAP to default option (/home/USER/snap) and install it in a different folder (e.g /home/USER/esa-snap) to avoid facing conflicts with Ubuntu snap package manager.
 
 ### Install SEN-ET SNAP plugin
 
