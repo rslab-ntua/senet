@@ -33,6 +33,15 @@ $chmod +x snappy_conf_perm.sh
 $./snappy_conf_perm.sh
 ```
 
+### Install ESA CCI Land Cover Map
+
+Download and install ESA CCI Land Cover Map to ESA-SNAP with `install_CCI_LC.sh` script. The shell script input is the complete installation path of SNAP.
+
+```bash
+$chmod +x install_CCI_LC.sh
+$./install_CCI_LC.sh
+```
+
 ### Install Python GDAL
 
 Use `install_gdal.sh` for a complete installation of GDAL python bindings.
