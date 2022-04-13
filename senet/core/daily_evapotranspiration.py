@@ -8,7 +8,7 @@ def daily_evapotranspiration(ief_file:str, mi_file:str, output_file:str):
 
     Args:
         ief_file (str): Path to energy fluxes product
-        mi_file (str): Path to meteoro;ogical data product (from prepare)
+        mi_file (str): Path to meteorological data product (from prepare)
         output_file (str): Path to store daily evapotranspiration [mm/day]
     """
 

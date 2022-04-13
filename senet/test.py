@@ -30,7 +30,8 @@ USER = getpass.getuser()
 
 meteo_datapath = "/home/eouser/uth/Cap_Bon/Meteo/"
 
-AOI_path = "/home/eouser/uth/Cap_Bon/AOI/AOI_Cap_Bon.geojson"
+#AOI_path = "/home/eouser/uth/Cap_Bon/AOI/AOI_Cap_Bon.geojson"
+AOI_path = "/home/eouser/uth/Cap_Bon/AOI/AOI_Cap_Bon_Big.geojson"
 AOI = geopandas.read_file(AOI_path)
 CRS = AOI.crs
 
@@ -39,10 +40,11 @@ if CRS != wgs_crs:
 
 WKT_GEOM = AOI.geometry[0]
 
-user = "guest"
-password = "guest"
-start_date = "20210810"
-end_date = "20210820"
+# Currently we use an ESA SCIHUB account for querying for data and we create the CreoDIAS paths. We can probably use CreoDIAS FinderAPI later on.
+user = "mago.creodias"
+password = "TESTing.11"
+start_date = "20210827"
+end_date = "20210829"
 data = get_data(AOI_path, start_date, end_date, user, password, producttype = "S2MSI2A")
 data = prepare_data_senet_S2(data)
 creodias_paths = eodata_path_creator(data)
@@ -86,9 +88,8 @@ if not os.path.exists(os.path.join(home, "Sentinel-3")):
 if not os.path.exists(os.path.join(home, "Sentinel-3", s3.name)):
     os.mkdir(os.path.join(home, "Sentinel-3", s3.name))
 
-s3_savepath = os.path.join(home, "Sentinel-3") 
+s3_savepath = os.path.join(home, "Sentinel-3")
 
-"""
 # 1.SENTINEL 2 PREPROCESSING (GRAPH)
 subprocess.run([f"/home/eouser/{USER}/esa-snap/bin/gpt", "./auxdata/sentinel_2_preprocessing.xml",
     "-PINPUT_S2_L2A={}".format(os.path.join(s2_path, s2_name, "MTD_MSIL2A.xml")),
@@ -112,7 +113,7 @@ subprocess.run([f"/home/eouser/{USER}/esa-snap/bin/gpt", "./auxdata/add_landcove
     ])
 
 # 4. Estimate leaf reflectance and transmittance
-biophysical_file = os.path.join(s2_savepath, s2_name, "AUX_DATA", "{}_{}_BIO.dim".format(s2.tile_id, s2.str_datetime))
+biophysical_file = os.path.join(s2_savepath, s2_name, "{}_{}_BIO.dim".format(s2.tile_id, s2.str_datetime))
 output = os.path.join(s2_savepath, s2_name, "{}_{}_LEAF-REFL-TRAN.dim".format(s2.tile_id, s2.str_datetime))
 leaf_spectra(biophysical_file, output)
 
@@ -146,7 +147,7 @@ output = os.path.join(s2_savepath, s2_name, "{}_{}_AERO-ROUGH.dim".format(s2.til
 aerodynamic_roughness(biophysical_file, param_file, output)
 
 # 8.S3 Pre-Processing (GRAPH)
-subprocess.run([f"/home/{USER}/esa-snap/bin/gpt", "./auxdata/sentinel_3_preprocessing.xml",
+subprocess.run([f"/home/eouser/{USER}/esa-snap/bin/gpt", "./auxdata/sentinel_3_preprocessing.xml",
     "-PINPUT_S3_L2={}".format(os.path.join(s3_path, s3_name)),
     "-PINPUT_AOI_WKT={}".format(WKT_GEOM),
     "-POUTPUT_observation_geometry={}".format(os.path.join(s3_savepath, s3_name, "LST_OBS-GEOM.dim")),
@@ -212,7 +213,7 @@ lsp_product = os.path.join(s2_savepath, s2_name, "{}_{}_LEAF-REFL-TRAN.dim".form
 lai_product = os.path.join(s2_savepath, s2_name, "{}_{}_BIO.dim".format(s2.tile_id, s2.str_datetime))
 csp_product = os.path.join(s2_savepath, s2_name, "{}_{}_STR-PARAM.dim".format(s2.tile_id, s2.str_datetime))
 mi_product = os.path.join(meteo_datapath, "meteo_{}_{}_PROC.dim".format(start_date, end_date))
-sza_product =  os.path.join(s3_savepath, s3_name, "LST_OBS-GEON-REPROJ.dim")
+sza_product =  os.path.join(s3_savepath, s3_name, "LST_OBS-GEOM-REPROJ.dim")
 output_file = os.path.join(s2_savepath, s2_name, "{}_{}_NET-RAD.dim".format(s2.tile_id, s2.str_datetime))
 net_shortwave_radiation(lsp_product, lai_product, csp_product, mi_product, sza_product, output_file)
 
@@ -220,7 +221,7 @@ net_shortwave_radiation(lsp_product, lai_product, csp_product, mi_product, sza_p
 start_date = str(s2.date - timedelta(days = 1))
 end_date = str(s2.date + timedelta(days = 1))
 lst = os.path.join(s3_savepath, s3_name, "LST_SHARP.dim")
-lst_vza = os.path.join(s3_savepath, s3_name, "LST_OBS-GEON-REPROJ.dim")
+lst_vza = os.path.join(s3_savepath, s3_name, "LST_OBS-GEOM-REPROJ.dim")
 lai = os.path.join(s2_savepath, s2_name, "{}_{}_BIO.dim".format(s2.tile_id, s2.str_datetime))
 csp =  os.path.join(s2_savepath, s2_name, "{}_{}_STR-PARAM.dim".format(s2.tile_id, s2.str_datetime))
 fgv = os.path.join(s2_savepath, s2_name, "{}_{}_FV.dim".format(s2.tile_id, s2.str_datetime))
@@ -241,4 +242,6 @@ mi_file = os.path.join(meteo_datapath, "meteo_{}_{}_PROC.dim".format(start_date,
 output_file = os.path.join(s2_savepath, s2_name, "{}_{}_EVAP.dim".format(s2.tile_id, s2.str_datetime))
 
 daily_evapotranspiration(ief_file, mi_file, output_file)
-"""
+
+# 17. Clip to geometry borders
+#input_file = os.path.join(s2_savepath, s2_name, "{}_{}_EVAP.dim".format(s2.tile_id, s2.str_datetime))
