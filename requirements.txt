@@ -1,3 +1,4 @@
+gdal==2.2.3
 getpass4
 pandas
 geopandas
@@ -8,6 +9,6 @@ pyproj
 numpy
 cdsapi
 netCDF4
-git+git://github.com/hectornieto/pypro4sail@master
-git+git://github.com/DHI-GRAS/pyTSEB@master
-git+git://github.com/alekfal/pyDMS@master
+git+https://github.com/hectornieto/pypro4sail@master
+git+https://github.com/DHI-GRAS/pyTSEB@master
+git+https://github.com/alekfal/pyDMS@master
