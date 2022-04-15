@@ -43,18 +43,28 @@ WKT_GEOM = AOI.geometry[0]
 # Currently we use an ESA SCIHUB account for querying for data and we create the CreoDIAS paths. We can probably use CreoDIAS FinderAPI later on.
 user = "mago.creodias"
 password = "TESTing.11"
-start_date = "20210827"
-end_date = "20210829"
+start_date = "20180410"
+end_date = "20180420"
 data = get_data(AOI_path, start_date, end_date, user, password, producttype = "S2MSI2A")
 data = prepare_data_senet_S2(data)
 creodias_paths = eodata_path_creator(data)
 
-# From all available images select the first
-s2_path, s2_name = os.path.split(creodias_paths[0])
-print(s2_path, s2_name)
+# From all available images select the one with the least cloud coverage
+candidates = []
+for path in creodias_paths:
+    s2_path, s2_name = os.path.split(path)
+    s2 = sentinel2(s2_path, s2_name)
+    s2.getmetadata()
+    candidates.append(s2)
 
-s2 = sentinel2(s2_path, s2_name)
-s2.getmetadata()
+cloud_coverage = [c.cloud_cover for c in candidates]
+zipped = zip(cloud_coverage, candidates)
+sorted_data = sorted(zipped, key = lambda k: (k[0]))
+s2 = sorted_data[0][1]
+s2_path = s2.path
+s2_name = s2.name
+
+print(s2_path, s2_name)
 
 # Now select an available S3 image
 start_date = s2.date
@@ -62,14 +72,24 @@ end_date = s2.date + timedelta(days=1)
 data = get_data(AOI_path, start_date, end_date, user, password, platform = "Sentinel-3", producttype = "SL_2_LST___")
 creodias_paths = eodata_path_creator(data)
 
+# From all S3 images select the one with the least cloud coverage at the same date with Sentinel-2 data
+candidates = []
 for path in creodias_paths:
-    # Again select the first image
     s3_path, s3_name = os.path.split(path)
     s3 = sentinel3(s3_path, s3_name)
     s3.getmetadata()
 
     if s3.date == s2.date:
-        break
+        candidates.append(s3)
+
+cloud_coverage = [c.cloud_cover for c in candidates]
+zipped = zip(cloud_coverage, candidates)
+sorted_data = sorted(zipped, key = lambda k: (k[0]))
+s3 = sorted_data[0][1]
+s3_path = s3.path
+s3_name = s3.name
+
+print(s3_path, s3_name)
 
 # Because the user has no permission to write make a new directory inside the user with the selected image name
 home = "/home/eouser/uth"

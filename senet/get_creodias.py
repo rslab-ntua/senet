@@ -65,20 +65,17 @@ def eodata_path_creator(data:pd.DataFrame):
         if platform[i] == "Sentinel-3":
             instrument = data["instrumentshortname"].iloc[[i]][0]
             instrument = EO_INSTRUMENTS[platform[i]][instrument]
-            year = str(data["beginposition"].iloc[[i]][0].year)
-            month = "{:02d}".format(data["beginposition"].iloc[[i]][0].month)
-            day = "{:02d}".format(data["beginposition"].iloc[[i]][0].day)
         else:
-            year = str(data["generationdate"].iloc[[i]][0].year)
-            month = "{:02d}".format(data["generationdate"].iloc[[i]][0].month)
-            day = "{:02d}".format(data["generationdate"].iloc[[i]][0].day)
             instrument = EO_INSTRUMENTS[platform[i]]
+
+        year = str(data["beginposition"].iloc[[i]][0].year)
+        month = "{:02d}".format(data["beginposition"].iloc[[i]][0].month)
+        day = "{:02d}".format(data["beginposition"].iloc[[i]][0].day)
 
         path = os.path.join(path, platform[i], instrument, EO_PRODUCT_TYPES[platform[i]][product[i]], year, month, day, filenames[i])
         creodias_paths.append(path)
     
     return creodias_paths
-    
     
 def prepare_data_senet_S2(data:pd.DataFrame):
     """Cleans API response dataframe from Sentinel-2 L1C data.
@@ -131,5 +128,7 @@ def get_data(area:str, start_date:str, end_date:str, username:str, password:str,
     footprint = geojson_to_wkt(read_geojson(area))
     products = api.query(footprint, date = (start_date, end_date), platformname = platform, **kwargs)
     products_df = api.to_dataframe(products)
-
+    if products_df.empty:
+        raise ValueError("ESA SciHUB returned empty request! This is either a bad request or there are no data available in the selected date range!")
+    
     return products_df

@@ -2,13 +2,14 @@
 import os
 import logging
 import xml.etree.ElementTree as Etree
+import lxml.etree as lEtree
 import fnmatch
 import datetime
 import pyproj
 import urllib
 
 # Define a lambda function to convert dates
-convert = lambda x: datetime.datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%f')
+convert = lambda x: datetime.datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%fZ')
 
 class sentinel2():
     """A Sentinel 2 image."""
@@ -69,16 +70,15 @@ class sentinel2():
         Args:
             root (eTree.Element): S2 metadata from eTree.Element type object
         """
-        
-        logging.info("  - Parsing General Metadata file...")
-        self.satellite = root[0][0][9][0].text
+        self.satellite = root.findall(".//SPACECRAFT_NAME")[0].text
         self.str_datetime = self.name[11:26]
-        self.datetime = convert(root[0][0][9][2].text.split('Z')[0])
+        self.datetime = convert(root.findall(".//DATATAKE_SENSING_START")[0].text)
         self.date = self.datetime.date()
         self.time = self.datetime.time()
-        self.gml_coordinates = root[1][0][0][0][0].text
-        self.cloud_cover = "{:.3f}".format(float(root[3][0].text))
-        self.processing_level = root[0][0][3].text
+        self.gml_coordinates = root.findall(".//EXT_POS_LIST")[0].text
+  
+        self.cloud_cover = "{:.3f}".format(float(root.findall(".//Cloud_Coverage_Assessment")[0].text))
+        self.processing_level = root.findall(".//PROCESSING_LEVEL")[0].text
         self.tile_id = self.name[39:44]
         logging.info("  - Done!")
 
@@ -156,9 +156,8 @@ class sentinel2():
         """
         print (self.__dict__)
 
-
 class sentinel3():
-    
+
     def __init__(self, path, name):
         """ A Sentinel 3 SLTRS image.
         Args:
@@ -196,23 +195,23 @@ class sentinel3():
             file (str): Name of the file
         """
         logging.info("  - Reading {}".format(os.path.join(self.path, self.name, file)))
-        tree = Etree.parse(os.path.join(self.path, self.name, file))
+        tree = lEtree.parse(os.path.join(self.path, self.name, file))
         root = tree.getroot()
-        self.satellite = root[1][1][0][0][0][1].text
-        self.number = root[1][1][0][0][0][2].text
-        self.str_datetime = root[1][0][0][0][0][0].text
-        self.datetime = convert( root[1][0][0][0][0][0].text.split('Z')[0])
+        self.satellite = root.find(".//{*}platform").text
+        self.number = root.find(".//{*}number").text
+        self.str_datetime = root.find(".//{*}startTime").text
+        self.datetime = convert(self.str_datetime)
         self.date = self.datetime.date()
         self.time = self.datetime.time()
-        self.gml_coordinates = root[1][2][0][0][0][0][0].text
-        self.cloud_cover = "{:.3f}".format(float(root[1][4][0][0][0][0][5].get("percentage")))
+        self.gml_coordinates = root.find(".//{*}posList").text
+        self.cloud_cover = "{:.3f}".format(float(root.find(".//{*}cloudyPixels").get("percentage")))
         self.processing_level = root[1][3][0][0][0][1].text.split("_")[1]
-        self.type = root[1][3][0][0][0][1].text.split("_")[2]
+        self.type = root.find(".//{*}productType").text
         # Getting CRS Metadata
-        footprint_metadata = root[1][2][0][0][0][0].get("srsName")
+        footprint_metadata = root.find(".//{*}footPrint").get("srsName")
         response = urllib.request.urlopen(footprint_metadata).read()
-        crs_root = Etree.fromstring(response)
-        crs = crs_root[3].text
+        crs_root = lEtree.fromstring(response)
+        crs = crs_root.find(".//{*}name").text
         self.crs = pyproj.crs.CRS(crs)
         logging.info("  - Done!")
 
