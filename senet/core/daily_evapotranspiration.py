@@ -1,7 +1,7 @@
 import numpy as np
 from pyTSEB import meteo_utils as met
 
-import core.snappy_utils as su
+import senet.core.snappy_utils as su
 
 def daily_evapotranspiration(ief_file:str, mi_file:str, output_file:str):
     """Estimates daily evapotranspiration by extrapolating instantaneous latent heat flux using daily solar irradiance.

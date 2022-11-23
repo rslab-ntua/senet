@@ -150,7 +150,7 @@ class sentinel2():
                         if fnmatch.fnmatch(file, "*_{}_*.jp2".format(band)):
                             logging.debug(os.path.join(dirpath, file))
                             setattr(self, '{}'.format(band), os.path.join(dirpath, file))
-
+    @property
     def show_metadata(self):
         """Prints metadata using __dict__
         """
@@ -197,7 +197,7 @@ class sentinel3():
         logging.info("  - Reading {}".format(os.path.join(self.path, self.name, file)))
         tree = lEtree.parse(os.path.join(self.path, self.name, file))
         root = tree.getroot()
-        self.satellite = root.find(".//{*}platform").text
+        self.satellite = root.find(".//{*}familyName").text
         self.number = root.find(".//{*}number").text
         self.str_datetime = root.find(".//{*}startTime").text
         self.datetime = convert(self.str_datetime)
@@ -215,6 +215,7 @@ class sentinel3():
         self.crs = pyproj.crs.CRS(crs)
         logging.info("  - Done!")
 
+    @property
     def show_metadata(self):
         """Prints metadata using __dict__
         """

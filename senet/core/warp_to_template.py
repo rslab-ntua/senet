@@ -1,7 +1,7 @@
 import tempfile
 import os
-import core.gdal_utils as gu
-import core.snappy_utils as su
+import senet.core.gdal_utils as gu
+import senet.core.snappy_utils as su
 
 def warp(source:str, template:str, output:str, resample_algorithm:str = "cubicspline"):
     """Reprojects, resamples and subsets a source image to a template image using GDAL Warp.

@@ -1,4 +1,4 @@
-from core.ecmwf_utils import download_CDS_data
+from senet.core.ecmwf_utils import download_CDS_data
 
 def get(area:str, start_date:str, end_date:str, download_path:str, download_pressure:bool = True, download_temperature:bool= True,
     download_dewpoint:bool= True, download_wind_speed:bool = True, download_clear_sky_solar_radiation:bool = True, download_solar_radiation:bool= True,

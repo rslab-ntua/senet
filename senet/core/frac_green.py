@@ -1,6 +1,6 @@
 import numpy as np
 from pyTSEB import TSEB
-import core.snappy_utils as su
+import senet.core.snappy_utils as su
 
 def fraction_green(sza_file:str, biophysical_file:str, min_frac_green:float, output_file:str):
     """Estimates the fraction of vegetation which is green based on the leaf area index (LAI),

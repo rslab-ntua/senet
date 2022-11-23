@@ -5,8 +5,8 @@ import os.path as pth
 
 from pyDMS.pyDMS import DecisionTreeSharpener
 
-import core.gdal_utils as gu
-import core.snappy_utils as su
+import senet.core.gdal_utils as gu
+import senet.core.snappy_utils as su
 
 def sharpen(sentinel_2_reflectance:str, sentinel_3_lst:str, high_res_dem:str, high_res_geom:str, lst_quality_mask:str,
     date_time_utc:str, output:str, elevation_band:str = "elevation", cv_homogeneity_threshold:float = .0, lst_good_quality_flags:str = "1",

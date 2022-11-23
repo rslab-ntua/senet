@@ -13,21 +13,20 @@ import netCDF4
 
 from pyTSEB import meteo_utils as met
 
-import core.gdal_utils as gu
+if not os.path.isdir(os.path.expanduser('~')) and not os.getenv('CDSAPI_RC', None):
+    os.environ['CDSAPI_RC'] = os.path.join(cur_path, '../../../../.cdsapirc')
+import cdsapi
+
+import senet.core.gdal_utils as gu
 
 # Acceleration of gravity (m s-2)
 GRAVITY = 9.80665
 # Blending height of 100 m
 Z_BH = 100.0
 
-
 def download_CDS_data(date_start:str, date_end:str, variables:list, target:str, overwrite:bool=False, area:str=None):
-    
-    if not os.path.isdir(os.path.expanduser('~')) and not os.getenv('CDSAPI_RC', None):
-        os.environ['CDSAPI_RC'] = os.path.join(cur_path, '../../../../.cdsapirc')
-    import cdsapi
+    print("Downloading CDS data...")
     s = {}
-
     s["variable"] = variables
     s["product_type"] = "reanalysis"
     s["date"] = date_start + "/" + date_end
@@ -40,8 +39,9 @@ def download_CDS_data(date_start:str, date_end:str, variables:list, target:str, 
     if not os.path.exists(target) or overwrite:
         c = cdsapi.Client()
         c.retrieve("reanalysis-era5-single-levels", s, target)
+        del c
+    
     print("Downloaded")
-
 
 def get_ECMWF_data(ecmwf_data_file, field, timedate_UTC, elev, time_zone):
 
@@ -57,7 +57,6 @@ def get_ECMWF_data(ecmwf_data_file, field, timedate_UTC, elev, time_zone):
     ncfile.close()
 
     if field == "air_temperature":
-        print("air_temperature")
         t2m, gt, proj = _getECMWFTempInterpData(ecmwf_data_file, "t2m", beforeI, afterI, frac)
         # Get geopotential height at which Ta is calculated
         z, gt, proj = _getECMWFTempInterpData(ecmwf_data_file, "z", beforeI, afterI, frac)
@@ -77,13 +76,11 @@ def get_ECMWF_data(ecmwf_data_file, field, timedate_UTC, elev, time_zone):
         data = calc_air_temperature_blending_height(T_datum, ea, p, elev_data+Z_BH, z_ta=0)
 
     elif field == "vapour_pressure":
-        print("vp")
         d2m, gt, proj = _getECMWFTempInterpData(ecmwf_data_file, "d2m", beforeI, afterI, frac)
         data = calc_vapour_pressure(d2m)
         data = _ECMWFRespampleData(data, gt, proj, elev)
 
     elif field == "wind_speed":
-        print("ws")
         u100, gt, proj = _getECMWFTempInterpData(ecmwf_data_file, "u100", beforeI, afterI, frac)
         v100, gt, proj = _getECMWFTempInterpData(ecmwf_data_file, "v100", beforeI, afterI, frac)
         # Combine the two components of wind speed and calculate speed at blending height
@@ -91,21 +88,18 @@ def get_ECMWF_data(ecmwf_data_file, field, timedate_UTC, elev, time_zone):
         data = _ECMWFRespampleData(ws100, gt, proj, elev)
 
     elif field == "air_pressure":
-        print("ap")
         sp, gt, proj = _getECMWFTempInterpData(ecmwf_data_file, "sp", beforeI, afterI, frac)
         # Convert pressure from pascals to mb
         data = calc_pressure_mb(sp)
         data = _ECMWFRespampleData(data, gt, proj, elev)
 
     elif field == "clear_sky_solar_radiation":
-        print("cssr")
         ssrdc, gt, proj = _getECMWFTempInterpData(ecmwf_data_file, "ssrdc", beforeI, afterI, frac)
         # Convert from Jules to Watts
         data = ssrdc / 3600.0
         data = _ECMWFRespampleData(data, gt, proj, elev)
 
     elif field == "average_daily_solar_irradiance":
-        print("adsi")
         # Find midnight in local time and convert to UTC time
         date_local = (timedate_UTC + datetime.timedelta(hours=time_zone)).date()
         midnight_local = datetime.datetime.combine(date_local, datetime.time())

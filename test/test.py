@@ -7,21 +7,21 @@ import math
 
 from datetime import datetime, timedelta
 
-from get_creodias import get_data, prepare_data_senet_S2, eodata_path_creator
-from sentinels import sentinel2, sentinel3
-from timezone import get_offset
-from core.leaf_spectra import leaf_spectra
-from core.frac_green import fraction_green
-from core.structural_params import str_parameters
-from core.aerodynamic_roughness import aerodynamic_roughness
-from core.warp_to_template import warp
-from core.data_mining_sharpener import sharpen
-from core.ecmwf_data_download import get
-from core.ecmwf_data_preparation import prepare
-from core.longwave_irradiance import longwave_irradiance
-from core.net_shortwave_radiation import net_shortwave_radiation
-from core.energy_fluxes import energy_fluxes
-from core.daily_evapotranspiration import daily_evapotranspiration
+from senet.get_creodias import get_data, prepare_data_senet_S2, eodata_path_creator
+from senet.sentinels import sentinel2, sentinel3
+from senet.timezone import get_offset
+from senet.core.leaf_spectra import leaf_spectra
+from senet.core.frac_green import fraction_green
+from senet.core.structural_params import str_parameters
+from senet.core.aerodynamic_roughness import aerodynamic_roughness
+from senet.core.warp_to_template import warp
+from senet.core.data_mining_sharpener import sharpen
+from senet.core.ecmwf_data_download import get
+from senet.core.ecmwf_data_preparation import prepare
+from senet.core.longwave_irradiance import longwave_irradiance
+from senet.core.net_shortwave_radiation import net_shortwave_radiation
+from senet.core.energy_fluxes import energy_fluxes
+from senet.core.daily_evapotranspiration import daily_evapotranspiration
 
 # All ROI must be in WGS84
 wgs_crs = pyproj.crs.CRS("epsg:4326")

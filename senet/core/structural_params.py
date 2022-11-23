@@ -1,5 +1,8 @@
 import numpy as np
-import core.snappy_utils as su
+import senet.core.snappy_utils as su
+import os
+path =  os.path.dirname(os.path.abspath(__file__))
+auxdata = os.path.join(path, "../auxdata")
 
 def _estimate_param_value(landcover:np.array, lut:dict, band:str): 
     """Get LUT value for a category.
@@ -21,7 +24,7 @@ def _estimate_param_value(landcover:np.array, lut:dict, band:str):
     return param_value
 
 def str_parameters(landcover_map:str, lai_map:str, fgv_map:str, landcover_band:str, produce_vh:bool, produce_fc:bool,
-    produce_chwr:bool, produce_lw:bool, produce_lid:bool, produce_igbp:bool, output_file:str, lookup_table:str = "./auxdata/LUT/ESA_CCI_LUT.csv"):
+    produce_chwr:bool, produce_lw:bool, produce_lid:bool, produce_igbp:bool, output_file:str, lookup_table:str = os.path.join(auxdata, "LUT/ESA_CCI_LUT.csv")):
     """Produces maps of vegetation structural parameters required for TSEB model, based on a land cover map and a look-up table (LUT).
 
     Args:

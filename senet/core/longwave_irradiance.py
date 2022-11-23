@@ -1,7 +1,7 @@
 import numpy as np
 
 import pyTSEB.net_radiation as rad
-import core.snappy_utils as su
+import senet.core.snappy_utils as su
 
 def longwave_irradiance(meteo_product:str, output_file:str, at_band:str = "air_temperature", vp_band:str = "vapour_pressure", ap_band:str = "air_pressure", at_height:float = 100.0):
     """Estimates atmosphere longwave irradiance [W/m^{2}] based on meteorological inputs.

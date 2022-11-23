@@ -1,7 +1,7 @@
 import tempfile
-import core.ecmwf_utils as eu
+import senet.core.ecmwf_utils as eu
 # snappy_utils should be imported last, as it modifies the system path
-import core.snappy_utils as su
+import senet.core.snappy_utils as su
 import datetime
 
 def prepare(elevation_map:str, ecmwf_data_file:str, date_time_utc:datetime.datetime, time_zone:float, output_file:str, elevation_band:str = "elevation",

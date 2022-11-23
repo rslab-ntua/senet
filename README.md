@@ -13,7 +13,7 @@ $chmod +x install_snap.sh
 $./install_snap.sh
 ```
 
-:warning: Do not install SNAP to default option (/home/USER/snap) and install it in a different folder (e.g /home/USER/esa-snap) to avoid facing conflicts with Ubuntu snap package manager.
+:warning: Do not install SNAP to default option (/home/USER/snap) and install it in a different folder (e.g /home/USER/esa-snap) to avoid facing problems with Ubuntu snap.
 
 ### Install SEN-ET SNAP plugin
 
@@ -73,7 +73,7 @@ $./update_snap_no_GUI.sh
 
 ## Python Pipeline
 
-The following section analyses step by step the complete Python pipeline in order to acquire daily evapotranspiration. 
+The following section analyses step by step the complete Python pipeline in order to acquire daily evapotranspiration.
 
 | Python Method Index                                                                                       | Operation Type     |
 ------------------------------------------------------------------------------------------------------------|--------------------|

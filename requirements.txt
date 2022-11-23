@@ -9,6 +9,3 @@ pyproj
 numpy
 cdsapi
 netCDF4
-git+https://github.com/hectornieto/pypro4sail@master
-git+https://github.com/DHI-GRAS/pyTSEB@master
-git+https://github.com/alekfal/pyDMS@master

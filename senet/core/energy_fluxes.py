@@ -1,7 +1,7 @@
 import numpy as np
 from pyTSEB import TSEB
 
-import core.snappy_utils as su
+import senet.core.snappy_utils as su
 
 def energy_fluxes(lst:str, lst_vza:str, lai:str, csp:str, fgv:str, ar:str, mi:str, nsr:str, li:str, mask:str, output_file:str, soil_roughness:float = .01, alpha_pt:float = 1.28,
     atmospheric_measurement_height:float = 100.0, green_vegetation_emissivity:float = 0.99, soil_emissivity:float = 0.99, save_component_fluxes:bool = True,

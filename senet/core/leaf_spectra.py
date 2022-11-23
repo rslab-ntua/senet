@@ -1,5 +1,5 @@
 import numpy as np
-import core.snappy_utils as su
+import senet.core.snappy_utils as su
 
 def cab_to_vis_spectrum(cab:np.array, coeffs_wc_rho_vis:list=[0.14096573, -0.09648072, -0.06328343], coeffs_wc_tau_vis:list=[0.08543707, -0.08072709, -0.06562554]):
     """Estimates leaf reflectance and transmittance on visible spectrum.

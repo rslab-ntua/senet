@@ -9,7 +9,7 @@ if [ ! -f $SNAP ]
 then
 echo "Getting Linux installer from ESA..."
 wget $URL
-
+fi
 # Change mode to executable
 chmod +x $SNAP
 

@@ -3,7 +3,7 @@ import numpy as np
 import pyTSEB.net_radiation as rad
 import pyTSEB.clumping_index as ci
 
-import core.snappy_utils as su
+import senet.core.snappy_utils as su
 
 def net_shortwave_radiation(lsp_product:str, lai_product:str, csp_product:str, mi_product:str, sza_product:str, output_file:str, soil_ref_vis:float = 0.15, soil_ref_nir:float = 0.25):
     """Estimates net shortwave radiation based on meteorological and biophysical inputs.

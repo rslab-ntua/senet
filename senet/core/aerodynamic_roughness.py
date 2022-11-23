@@ -1,6 +1,6 @@
 import numpy as np
 import pyTSEB.resistances as res
-import core.snappy_utils as su
+import senet.core.snappy_utils as su
 
 def aerodynamic_roughness(lai_map:str, landcover_params_map:str, output_file:str,soil_roughness:float = 0.01):
     """Estimates aerodynamic roughness length for momentum transport [m] and 
