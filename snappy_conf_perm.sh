@@ -3,11 +3,11 @@
 # Alekos Falagas (alek.falagas@gmail.com)
 
 echo "Provide SNAP installation path:"
-read -p "Is installation path /home/$USER/esa-snap/ and auxiliary path /home/$USER/.snap? [Y/n] " ANSWER
+read -p "Is installation path /home/eouser/$USER/esa-snap/ and auxiliary path /home/eouser/$USER/.snap? [Y/n] " ANSWER
 case "$ANSWER" in 
   [yY] | [yY][eE][sS])
-    SNAP_INSTALLATION_FOLDER="/home/$USER/esa-snap"
-    SNAP_AUX_FOLDER="/home/$USER/.snap"
+    SNAP_INSTALLATION_FOLDER="/home/eouser/$USER/esa-snap"
+    SNAP_AUX_FOLDER="/home/eouser/$USER/.snap"
     ;;
   [nN] | [nN][oO])
     read -p "Provide installation path: " SNAP_INSTALLATION_FOLDER

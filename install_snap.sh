@@ -3,7 +3,7 @@
 # Alekos Falagas (alek.falagas@gmail.com)
 
 # NO NEED FOR ROOT ACCESS is required for the instalation
-URL="https://download.esa.int/step/snap/8.0/installers/esa-snap_all_unix_8_0.sh" 
+URL="https://download.esa.int/step/snap/9.0/installers/esa-snap_sentinel_unix_9_0_0.sh" 
 SNAP=$(basename "$URL")
 if [ ! -f $SNAP ] 
 then

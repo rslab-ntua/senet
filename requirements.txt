@@ -3,9 +3,9 @@ getpass4
 pandas
 geopandas
 timezonefinder
-wheel
 sentinelsat
 pyproj
-numpy
 cdsapi
 netCDF4
+lxml
+scikit-learn

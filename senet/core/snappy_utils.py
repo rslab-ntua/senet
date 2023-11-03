@@ -2,6 +2,9 @@ import numpy as np
 
 import os
 import sys
+environment_variables = os.environ.copy()
+os.environ = environment_variables
+
 snappy_dir = os.path.join(os.path.expanduser("~"), ".snap", "snap-python")
 if os.path.isdir(snappy_dir):    
     sys.path.append(snappy_dir)

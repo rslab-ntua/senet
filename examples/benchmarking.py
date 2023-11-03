@@ -7,7 +7,7 @@ import math
 import gc
 from datetime import datetime, timedelta
 
-from senet.get_creodias import get_data, prepare_data_senet_S2, eodata_path_creator
+from senet.get_creodias import get_data, prepare_data_senet_S2, eodata_path_creator, get_data_DIAS
 from senet.sentinels import sentinel2, sentinel3
 from senet.timezone import get_offset
 from senet.core.graphs import s2_preprocessing, elevation, landcover, s3_preprocessing
@@ -29,7 +29,7 @@ WGS_CRS = pyproj.crs.CRS("epsg:4326")
 
 USER = getpass.getuser()
 
-PROJECT_FOLDER = "/home/eouser/uth/Benchmarking_Senet"
+PROJECT_FOLDER = "/home/eouser/uth/Testing_RAM_senet"
 if not os.path.exists(PROJECT_FOLDER):
     os.makedirs(PROJECT_FOLDER)
 
@@ -58,7 +58,7 @@ WKT_GEOM = AOI.geometry[0]
 user = "mago.creodias"
 password = "TESTing.11"
 start_date = "20220101"
-end_date = "20221030"
+end_date = "20220130"
 # Check here for more: https://scihub.copernicus.eu/twiki/do/view/SciHubUserGuide/FullTextSearch?redirectedfrom=SciHubUserGuide.3FullTextSearch
 data = get_data(AOI_PATH, start_date, end_date, user, password, producttype = "S2MSI2A", cloudcoverpercentage = "[0 TO 10]")
 data = prepare_data_senet_S2(data)
@@ -78,7 +78,7 @@ print(f"Starting processing for all images...")
 
 for s2 in sentinel_2_data:  
     print(f"----PAIR----")
-    print(f"Sentinel 2 image: {s2.name}")
+    print(f"Sentinel 2 image: {os.path.join(s2.path, s2.name)}")
     S2_SAVEPATH = os.path.join(SENTINEL_2_DATAPATH, s2.tile_id, s2.name) 
     if os.path.exists(S2_SAVEPATH):
         print("Already exists...")
@@ -110,7 +110,7 @@ for s2 in sentinel_2_data:
             os.makedirs(os.path.join(SENTINEL_3_DATAPATH, s3.name))
         S3_SAVEPATH = os.path.join(SENTINEL_3_DATAPATH, s3.name) 
         
-        print(f"Sentinel 3 image: {s3.name}")
+        print(f"Sentinel 3 image: {os.path.join(s3.path, s3.name)}")
         print(f"------------")
         print(f"Starting processing pair...")
 
@@ -173,7 +173,6 @@ for s2 in sentinel_2_data:
         # 8.S3 Pre-Processing (GRAPH)
         gpt = f"/home/eouser/{USER}/esa-snap/bin/gpt"
         S3_L2 = os.path.join(s3.path, s3.name, s3.md_file)
-        print(S3_L2)
         aoi = WKT_GEOM
         out_obs_geom = os.path.join(S3_SAVEPATH, "LST_OBS-GEOM.dim")
         out_mask = os.path.join(S3_SAVEPATH, "LST_MASK.dim")

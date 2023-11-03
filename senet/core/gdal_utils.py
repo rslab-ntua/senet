@@ -7,14 +7,9 @@ from pyDMS.pyDMSUtils import saveImg, openRaster, getRasterInfo
 #Since the conda environment is not active
 #make sure to set the env_variables needed for gdal
 import os
-cur_path =  os.path.dirname(os.path.abspath(__file__))
-if os.name == 'nt':
-    os.environ["PROJ_LIB"] = os.path.join(cur_path, "../Library/share/proj")
-    os.environ["GDAL_DATA"] = os.path.join(cur_path, "../Library/share/gdal")
-else:
-    os.environ["PROJ_LIB"] = os.path.join(cur_path, "../share/proj")
-    os.environ["GDAL_DATA"] = os.path.join(cur_path, "../share/gdal")
-from osgeo import gdal
+environment_variables = os.environ.copy()
+os.environ = environment_variables
+import gdal
 
 
 def slope_from_dem(dem_file_path, output=None):

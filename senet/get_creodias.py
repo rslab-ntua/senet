@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 from sentinelsat import SentinelAPI, read_geojson, geojson_to_wkt
+from creodias_finder import query
+from datetime import datetime
 
 EO_PRODUCT_TYPES = {
     "Sentinel-1": {
@@ -101,13 +103,30 @@ def prepare_data_senet_S2(data:pd.DataFrame):
 
     return data
 
-def order_CREODIAS_L2A(data:pd.DataFrame):
-    """TODO: MUST FIND A WAY TO ORDER OLDER (PAST 6 MONTHS) L2A DATA.
-
+def get_data_DIAS(area:str, start_date:str, end_date:str, platform:str = "Sentinel2", **kwargs):
+    """Query the Copernicus Data Space Ecosystem (CDSE) OpenSearch service for available products.
+    - For Sentinel-2 catalog attributes: https://catalogue.dataspace.copernicus.eu/resto/api/collections/Sentinel2/describe.xml
+    - For Sentinel-3 catalog attributes: https://catalogue.dataspace.copernicus.eu/resto/api/collections/Sentinel3/describe.xml
     Args:
-        data (pd.DataFrame): [description]
+        area (str): WKT geometry of the AOI.
+        start_date (str): Start date in YYYYMMDD format.
+        end_date (str): Start date in YYYYMMDD format.
+        platform (str, optional): Platform name (like Sentinel2 or Sentinel3). Defaults to "Sentinel2".
+
+    Returns:
+        list: List of available products in CreoDIAS based on the query.
     """
-    pass
+    data = []
+    results = query.query(
+        platform,
+        geometry=area,
+        start_date=datetime(int(start_date[:4]), int(start_date[4:6]), int(start_date[6:])),
+        end_date=datetime(int(end_date[:4]), int(end_date[4:6]), int(end_date[6:])),
+        **kwargs)
+    for key in results:
+        data.append(results[key]["properties"]["productIdentifier"])
+
+    return data
 
 def get_data(area:str, start_date:str, end_date:str, username:str, password:str, platform:str = "Sentinel-2", **kwargs):
     """Get data information from ESA APIHUB.
