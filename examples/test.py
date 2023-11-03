@@ -41,8 +41,8 @@ if CRS != wgs_crs:
 WKT_GEOM = AOI.geometry[0]
 
 # Currently we use an ESA SCIHUB account for querying for data and we create the CreoDIAS paths. We can probably use CreoDIAS FinderAPI later on.
-user = "mago.creodias"
-password = "TESTing.11"
+user = "guest"
+password = "guest"
 start_date = "20180410"
 end_date = "20180420"
 data = get_data(AOI_path, start_date, end_date, user, password, producttype = "S2MSI2A")
@@ -254,7 +254,6 @@ output_file = os.path.join(s2_savepath, s2_name, "{}_{}_EN-FLUX.dim".format(s2.t
 energy_fluxes(lst, lst_vza, lai, csp, fgv, ar, mi, nsr, li, mask, output_file)
 
 # 16. Estimate daily evapotranspiration
-
 start_date = str(s2.date - timedelta(days = 1))
 end_date = str(s2.date + timedelta(days = 1))
 ief_file = os.path.join(s2_savepath, s2_name, "{}_{}_EN-FLUX.dim".format(s2.tile_id, s2.str_datetime))
@@ -262,6 +261,3 @@ mi_file = os.path.join(meteo_datapath, "meteo_{}_{}_PROC.dim".format(start_date,
 output_file = os.path.join(s2_savepath, s2_name, "{}_{}_EVAP.dim".format(s2.tile_id, s2.str_datetime))
 
 daily_evapotranspiration(ief_file, mi_file, output_file)
-
-# 17. Clip to geometry borders
-#input_file = os.path.join(s2_savepath, s2_name, "{}_{}_EVAP.dim".format(s2.tile_id, s2.str_datetime))

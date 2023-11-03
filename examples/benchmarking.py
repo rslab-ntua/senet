@@ -55,8 +55,8 @@ if CRS != WGS_CRS:
 WKT_GEOM = AOI.geometry[0]
 
 # Currently we use an ESA SCIHUB account for querying for data and we create the CreoDIAS paths. We can probably use CreoDIAS FinderAPI later on.
-user = "mago.creodias"
-password = "TESTing.11"
+user = "guest"
+password = "guest"
 start_date = "20220101"
 end_date = "20220130"
 # Check here for more: https://scihub.copernicus.eu/twiki/do/view/SciHubUserGuide/FullTextSearch?redirectedfrom=SciHubUserGuide.3FullTextSearch
