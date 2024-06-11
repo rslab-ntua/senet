@@ -9,3 +9,4 @@ cdsapi
 netCDF4
 lxml
 scikit-learn
+requests

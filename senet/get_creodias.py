@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from sentinelsat import SentinelAPI, read_geojson, geojson_to_wkt
+from sentinelsat import read_geojson, geojson_to_wkt
 from creodias_finder import query
 from datetime import datetime
 import requests
