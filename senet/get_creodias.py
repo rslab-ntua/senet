@@ -1,49 +1,8 @@
-import os
 import pandas as pd
 from sentinelsat import read_geojson, geojson_to_wkt
 from creodias_finder import query
 from datetime import datetime
 import requests
-
-EO_PRODUCT_TYPES = {
-    "Sentinel-1": {
-        "SLC": "SLC",
-        "GRD": "GRD",
-        "OCN": "OCN"
-    },
-    "Sentinel-2": {
-        "S2MSI2A": "L2A",
-        "S2MSI1C": "L1C",
-        "S2MS2Ap": "L2A"
-    },
-    "Sentinel-3": {
-        "SR_1_SRA___": "SR_1_SRA",
-        "SR_1_SRA_A": "SR_1_SRA_A",
-        "SR_1_SRA_BS": "SR_1_SRA_BS",
-        "SR_2_LAN___": "SR_2_LAN",
-        "OL_1_EFR___": "OL_1_EFR",
-        "OL_1_ERR___": "OL_1_ERR",
-        "OL_2_LFR___": "OL_2_LFR",
-        "OL_2_LRR___": "OL_2_LRR",
-        "SL_1_RBT___": "SL_1_RBT",
-        "SL_2_LST___": "SL_2_LST",
-        "SY_2_SYN___": "SSY_2_SYN___",
-        "SY_2_V10___": "SY_2_V10___",
-        "SY_2_VG1___": "SY_2_VG1___",
-        "SY_2_VGP___": "SY_2_VGP___"
-    }
-}
-
-EO_INSTRUMENTS = {
-    "Sentinel-1": "SAR",
-    "Sentinel-2": "MSI",
-    "Sentinel-3": {
-        "OLCI": "OLCI",
-        "SLSTR": "SLSTR",
-        "SRAL": "SRAL",
-        "SYNERGY": "SYNERGY"
-    }
-}
 
 CDS_URL = "https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=Collection/Name"
 
