@@ -48,43 +48,6 @@ EO_INSTRUMENTS = {
 CDS_URL = "https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=Collection/Name"
 
 
-def eodata_path_creator(data: pd.DataFrame):
-    """Convert a DataFrame with the response from APIHUB to CreoDIAS paths. Works with Sentinel-1, 2, 3 (all instruments).
-    Function builds paths as follows:
-    S1: /eodata/platform/instrumentshortname/producttype/year/month/day/filename
-    S2: /eodata/Sentinel-2/MSI/L2A/...
-    S3: /eodata/Sentinel-3/instrument/producttype/...
-    Args:
-        data (pd.DataFrame): APIHUB response as DataFrame
-
-    Returns:
-        list: CreoDIAS paths
-    """
-    # Really ugly
-    filenames = data['filename'].tolist()
-    platform = data["platformname"].tolist()
-    product = data["producttype"].tolist()
-
-    creodias_paths = []
-    for i in range(len(data)):
-        path = "/eodata"
-        if platform[i] == "Sentinel-3":
-            instrument = data["instrumentshortname"].iloc[[i]][0]
-            instrument = EO_INSTRUMENTS[platform[i]][instrument]
-        else:
-            instrument = EO_INSTRUMENTS[platform[i]]
-
-        year = str(data["beginposition"].iloc[[i]][0].year)
-        month = "{:02d}".format(data["beginposition"].iloc[[i]][0].month)
-        day = "{:02d}".format(data["beginposition"].iloc[[i]][0].day)
-
-        path = os.path.join(path, platform[i], instrument, EO_PRODUCT_TYPES[platform[i]][product[i]], year, month, day,
-                            filenames[i])
-        creodias_paths.append(path)
-
-    return creodias_paths
-
-
 def get_data_DIAS(area: str, start_date: str, end_date: str, platform: str = "Sentinel2", **kwargs):
     """Query the Copernicus Data Space Ecosystem (CDSE) OpenSearch service for available products.
     - For Sentinel-2 catalog attributes: https://catalogue.dataspace.copernicus.eu/resto/api/collections/Sentinel2/describe.xml
