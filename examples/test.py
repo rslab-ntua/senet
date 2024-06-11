@@ -7,7 +7,7 @@ import math
 
 from datetime import datetime, timedelta
 
-from senet.get_creodias import get_data, prepare_data_senet_S2, eodata_path_creator
+from senet.get_creodias import get_data
 from senet.sentinels import sentinel2, sentinel3
 from senet.timezone import get_offset
 from senet.core.leaf_spectra import leaf_spectra
@@ -45,9 +45,8 @@ user = "guest"
 password = "guest"
 start_date = "20180410"
 end_date = "20180420"
-data = get_data(AOI_path, start_date, end_date, user, password, producttype = "S2MSI2A")
-data = prepare_data_senet_S2(data)
-creodias_paths = eodata_path_creator(data)
+data = get_data(AOI_path, start_date, end_date,"SENTINEL-2", "S2MSI2A")
+creodias_paths = data["S3Path"]
 
 # From all available images select the one with the least cloud coverage
 candidates = []
@@ -70,7 +69,7 @@ print(s2_path, s2_name)
 start_date = s2.date
 end_date = s2.date + timedelta(days=1)
 data = get_data(AOI_path, start_date, end_date, user, password, platform = "Sentinel-3", producttype = "SL_2_LST___")
-creodias_paths = eodata_path_creator(data)
+creodias_paths = list(data["S3Path"])
 
 # From all S3 images select the one with the least cloud coverage at the same date with Sentinel-2 data
 candidates = []
