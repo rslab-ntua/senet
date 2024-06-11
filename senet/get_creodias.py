@@ -1,10 +1,9 @@
 import os
-from datetime import datetime
-
 import pandas as pd
-import requests
+from sentinelsat import SentinelAPI, read_geojson, geojson_to_wkt
 from creodias_finder import query
-from sentinelsat import read_geojson, geojson_to_wkt
+from datetime import datetime
+import requests
 
 EO_PRODUCT_TYPES = {
     "Sentinel-1": {
@@ -65,7 +64,7 @@ def eodata_path_creator(data: pd.DataFrame):
     filenames = data['filename'].tolist()
     platform = data["platformname"].tolist()
     product = data["producttype"].tolist()
-    
+
     creodias_paths = []
     for i in range(len(data)):
         path = "/eodata"
@@ -79,36 +78,14 @@ def eodata_path_creator(data: pd.DataFrame):
         month = "{:02d}".format(data["beginposition"].iloc[[i]][0].month)
         day = "{:02d}".format(data["beginposition"].iloc[[i]][0].day)
 
-        path = os.path.join(path, platform[i], instrument, EO_PRODUCT_TYPES[platform[i]][product[i]], year, month, day, filenames[i])
+        path = os.path.join(path, platform[i], instrument, EO_PRODUCT_TYPES[platform[i]][product[i]], year, month, day,
+                            filenames[i])
         creodias_paths.append(path)
-    
+
     return creodias_paths
-    
-def prepare_data_senet_S2(data:pd.DataFrame):
-    """Cleans API response dataframe from Sentinel-2 L1C data.
 
-    Args:
-        data (pd.DataFrame): APIHUB response as DataFrame
 
-    Raises:
-        ValueError: If no Sentinel-2 L2A or L2Ap instances found
-
-    Returns:
-       pd.DataFrame: Cleaned DataFrame
-    """
-
-    unique_product_types = data["producttype"].unique()
-    if ("S2MSI2A" or "S2MSI2Ap") not in unique_product_types:
-        raise ValueError("Only Sentinel-2 L2A data are supported!")
-    if "S2MSI1C" in unique_product_types:
-        print ("Found Sentinel-2 L1C data. Only Sentinel-L2A data are supported!")
-        print("Removing Sentinel-2 L1C data...")
-        data = data[data.producttype != "S2MSI1C"]
-        print("Done!")
-
-    return data
-
-def get_data_DIAS(area:str, start_date:str, end_date:str, platform:str = "Sentinel2", **kwargs):
+def get_data_DIAS(area: str, start_date: str, end_date: str, platform: str = "Sentinel2", **kwargs):
     """Query the Copernicus Data Space Ecosystem (CDSE) OpenSearch service for available products.
     - For Sentinel-2 catalog attributes: https://catalogue.dataspace.copernicus.eu/resto/api/collections/Sentinel2/describe.xml
     - For Sentinel-3 catalog attributes: https://catalogue.dataspace.copernicus.eu/resto/api/collections/Sentinel3/describe.xml
