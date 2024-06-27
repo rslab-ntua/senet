@@ -7,7 +7,7 @@ import math
 import gc
 from datetime import datetime, timedelta
 
-from senet.get_creodias import get_data, prepare_data_senet_S2, eodata_path_creator, get_data_DIAS
+from senet.get_creodias import get_data
 from senet.sentinels import sentinel2, sentinel3
 from senet.timezone import get_offset
 from senet.core.graphs import s2_preprocessing, elevation, landcover, s3_preprocessing
@@ -54,16 +54,15 @@ if CRS != WGS_CRS:
 
 WKT_GEOM = AOI.geometry[0]
 
-# Currently we use an ESA SCIHUB account for querying for data and we create the CreoDIAS paths. We can probably use CreoDIAS FinderAPI later on.
+# Currently we use an Copernicus dataspace for querying for data and we create the CreoDIAS paths. We can probably use
+# CreoDIAS FinderAPI later on.
 user = "guest"
 password = "guest"
-start_date = "20220101"
-end_date = "20220130"
-# Check here for more: https://scihub.copernicus.eu/twiki/do/view/SciHubUserGuide/FullTextSearch?redirectedfrom=SciHubUserGuide.3FullTextSearch
-data = get_data(AOI_PATH, start_date, end_date, user, password, producttype = "S2MSI2A", cloudcoverpercentage = "[0 TO 10]")
-data = prepare_data_senet_S2(data)
-creodias_paths = eodata_path_creator(data)
+start_date = "2022-01-01"
+end_date = "2022-01-30"
 
+data = get_data(AOI_PATH, start_date, end_date, platform="SENTINEL-2", product_type="S2MSI2A", max_cloud_cover=10)
+creodias_paths = list(data["S3Path"])
 
 # From all available images select the one with the least cloud coverage
 sentinel_2_data = []
@@ -87,9 +86,9 @@ for s2 in sentinel_2_data:
             os.makedirs(os.path.join(SENTINEL_2_DATAPATH, s2.tile_id, s2.name))
         # Now select an available S3 image
         start_date = s2.date
-        end_date = s2.date + timedelta(days = 1)
-        data = get_data(AOI_PATH, start_date, end_date, user, password, platform = "Sentinel-3", producttype = "SL_2_LST___")
-        creodias_paths = eodata_path_creator(data)
+        end_date = s2.date + timedelta(days=1)
+        data = get_data(AOI_PATH, start_date, end_date, platform="Sentinel-3", product_type="SL_2_LST___")
+        creodias_paths = list(data["S3Path"])
 
         # From all S3 images select the one with the least cloud coverage at the same date with Sentinel-2 data
         candidates = []

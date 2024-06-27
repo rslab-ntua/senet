@@ -8,7 +8,7 @@ import math
 import gc
 from datetime import datetime, timedelta
 
-from senet.get_creodias import get_data, prepare_data_senet_S2, eodata_path_creator, get_data_DIAS
+from senet.get_creodias import get_data_DIAS
 from senet.sentinels import sentinel2, sentinel3
 from senet.timezone import get_offset
 from senet.core.graphs import s2_preprocessing, elevation, landcover, s3_preprocessing
